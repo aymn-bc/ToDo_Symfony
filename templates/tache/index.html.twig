@@ -10,13 +10,13 @@
         <thead class="table-dark">
             <th>#</th>
             <th>Titre</th>
-            <th>terminee</th>
+            <th>Terminee</th>
             <th>Description</th>
         </thead>
         <tbody>
             {% if taches %}
                 {% for tache in taches %}
-                    <tr>
+                    <tr {% if tache.terminee %} style="text-decoration: line-through" {% endif %}>
                         <td>{{loop.index}}</td>
                         <td>{{tache.titre}}</td>
                         <td>{{tache.terminee ? 'true' : 'false'}}</td>

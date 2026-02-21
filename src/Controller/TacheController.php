@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Tache;
 use App\Repository\TacheRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\OrderBy;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,7 +15,7 @@ final class TacheController extends AbstractController
     #[Route('/tache', name: 'app_tache')]
     public function index(TacheRepository $tacheRepository): Response
     {   
-        $taches = $tacheRepository->findAll();
+        $taches = $tacheRepository->findBy([], ['terminee' => 'ASC']);
         return $this->render('tache/index.html.twig', [
             'taches' => $taches
         ]);
@@ -40,5 +41,13 @@ final class TacheController extends AbstractController
         return $this->render('tache/detail.html.twig', [
             'tache' => $tache
         ]);
+    }
+
+    #[Route('/tache/{id}/terminee', name: 'app_tache_terminee', requirements: ['id' => '\d+'])]
+    public function terminee(Tache $tache, EntityManagerInterface $em): Response
+    {
+        $tache->setTerminee(true);
+        $em->flush();
+        return new Response("Tache " . $tache->getId() . " est terminee");
     }
 }
